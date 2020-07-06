@@ -31,6 +31,19 @@
         password: "{{ ftp_password_hashed }}"
         state: present
     - copy:
+        dest: "{{ ftp_localroot }}/test-{{ item }}.txt"
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+        content: |
+          a simple test file
+          {{ item }}
+      loop:
+        - apple
+        - banana
+        - cranberry
+        - dragonfruit
+    - copy:
         dest: /home/vagrant/.netrc
         owner: vagrant
         group: vagrant
