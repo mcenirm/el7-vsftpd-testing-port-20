@@ -11,6 +11,9 @@
     ftp_hostname: localhost
     ftp_listenaddr: 127.0.0.1
     ftp_localroot: /srv
+    ftp_username: vagrant
+    ftp_password: "{{ lookup('password', '/home/vagrant/.secret') }}"
+    ftp_password_hashed: "{{ lookup('password', '/home/vagrant/.secret encrypt=sha512_crypt') }}"
   tasks:
     - package:
         name: "{{ package_list }}"
@@ -21,6 +24,28 @@
           - "{{ certfile }}"
         chdir: "{{ certdir }}"
         creates: "{{ certfull }}"
+    - user:
+        name: "{{ ftp_username }}"
+        password: "{{ ftp_password_hashed }}"
+        state: present
+    - copy:
+        dest: /home/vagrant/.netrc
+        owner: vagrant
+        group: vagrant
+        mode: u=rw,g=,o=
+        content: >
+          machine {{ ftp_hostname }}
+          login {{ ftp_username }}
+          password {{ ftp_password }}
+    - copy:
+        dest: /home/vagrant/testftp.sh
+        owner: vagrant
+        group: vagrant
+        mode: u=rwx,g=rx,o=rx
+        content: |
+          #!/bin/bash
+          set -euo pipefail
+          curl -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/
     - copy:
         dest: /etc/vsftpd/vsftpd.conf
         owner: root
