@@ -61,6 +61,7 @@
           #!/bin/bash
           set -euo pipefail
           curl -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/
+          curl -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/test-cranberry.txt
     - copy:
         dest: /etc/vsftpd/vsftpd.conf
         owner: root
