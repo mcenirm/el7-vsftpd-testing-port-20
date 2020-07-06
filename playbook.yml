@@ -14,6 +14,8 @@
     ftp_username: vagrant
     ftp_password: "{{ lookup('password', '/home/vagrant/.secret') }}"
     ftp_password_hashed: "{{ lookup('password', '/home/vagrant/.secret encrypt=sha512_crypt') }}"
+    ftp_pasv_min_port: 50000
+    ftp_pasv_max_port: 50050
   tasks:
     - package:
         name: "{{ package_list }}"
@@ -83,8 +85,8 @@
           require_ssl_reuse=NO
           ssl_ciphers=HIGH
           pasv_enable=YES
-          pasv_min_port=50000
-          pasv_max_port=50050
+          pasv_min_port={{ ftp_pasv_min_port }}
+          pasv_max_port={{ ftp_pasv_max_port }}
       notify: restart_vsftpd
     - service:
         name: vsftpd
