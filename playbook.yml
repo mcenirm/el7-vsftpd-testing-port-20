@@ -96,7 +96,7 @@
           ssl_tlsv1=YES
           ssl_tlsv1_1=YES
           ssl_tlsv1_2=YES
-          require_ssl_reuse=NO
+          require_ssl_reuse=YES
           ssl_ciphers=HIGH
           pasv_enable=YES
           pasv_min_port={{ ftp_pasv_min_port }}
