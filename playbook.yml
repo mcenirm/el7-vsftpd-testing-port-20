@@ -14,8 +14,8 @@
     ftp_username: vagrant
     ftp_password: "{{ lookup('password', '/home/vagrant/.secret') }}"
     ftp_password_hashed: "{{ lookup('password', '/home/vagrant/.secret encrypt=sha512_crypt') }}"
-    ftp_pasv_min_port: 50000
-    ftp_pasv_max_port: 50050
+    ftp_pasv_min_port: 20
+    ftp_pasv_max_port: 20
   tasks:
     - package:
         name: "{{ package_list }}"
