@@ -6,7 +6,7 @@
 Setting `pasv_min_port` and `pasv_max_port` both to `20` results in _vsftpd_ using a dynamic port, seemingly even from outside the [typical ephemeral or dynamic range](https://en.wikipedia.org/wiki/Ephemeral_port#Range).
 
 ```
-[vagrant@localhost vagrant]$ for i in {1..20} ; do ~/testftp.sh |& egrep -o '\|\|\|[0-9]+\|' ; done | tr -d \| | sort -n
+[vagrant@localhost vagrant]$ for i in {1..20} ; do ~/test-with-curl.sh |& egrep -o '\|\|\|[0-9]+\|' ; done | tr -d \| | sort -n
 1454
 6205
 7084
@@ -35,7 +35,9 @@ If the port range does not include 1024 or higher, then the above random behavio
 
 ## Requiring TLS session reuse
 
-Attempting to set `require_ssl_reuse=YES` results in curl complaining
+_lftp_ seems to work just fine with session reuse.
+
+Attempting to set `require_ssl_reuse=YES` results in _curl_ complaining
 
 ```
 > LIST

@@ -5,6 +5,7 @@
     package_list:
       - vsftpd
       - make
+      - lftp
     certdir: /etc/pki/tls/certs
     certfile: "{{ ftp_hostname }}.pem"
     certfull: "{{ certdir }}/{{ certfile }}"
@@ -53,15 +54,36 @@
           login {{ ftp_username }}
           password {{ ftp_password }}
     - copy:
-        dest: /home/vagrant/testftp.sh
+        dest: /home/vagrant/test-with-curl.sh
         owner: vagrant
         group: vagrant
         mode: u=rwx,g=rx,o=rx
         content: |
           #!/bin/bash
           set -euo pipefail
-          curl -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/
-          curl -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/test-cranberry.txt
+          curl -d -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/
+          curl -d -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/test-cranberry.txt
+    - copy:
+        dest: /home/vagrant/.lftprc
+        owner: vagrant
+        group: vagrant
+        mode: u=rw,g=,o=
+        content: |
+          debug
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate false
+    - copy:
+        dest: /home/vagrant/test-with-lftp.sh
+        owner: vagrant
+        group: vagrant
+        mode: u=rwx,g=rx,o=rx
+        content: |
+          #!/usr/bin/lftp -f
+          open {{ ftp_hostname }}
+          dir
+          cat test-cranberry.txt
+          exit
     - copy:
         dest: /etc/vsftpd/vsftpd.conf
         owner: root
