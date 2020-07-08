@@ -78,6 +78,7 @@
         mode: u=rw,g=,o=
         content: |
           debug
+          set ftp:passive-mode false
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           set ssl:verify-certificate false
