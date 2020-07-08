@@ -61,8 +61,14 @@
         content: |
           #!/bin/bash
           set -euo pipefail
-          curl -d -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/
-          curl -d -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/test-cranberry.txt
+          opts=(
+            --verbose
+            --netrc
+            --insecure
+            --ssl-reqd
+          )
+          curl "${opts[@]}" ftp://{{ ftp_hostname }}/
+          curl "${opts[@]}" ftp://{{ ftp_hostname }}/test-cranberry.txt
     - copy:
         dest: /home/vagrant/.lftprc
         owner: vagrant
