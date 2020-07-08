@@ -61,8 +61,16 @@
         content: |
           #!/bin/bash
           set -euo pipefail
-          curl -d -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/
-          curl -d -v --netrc --insecure --ssl-reqd ftp://{{ ftp_hostname }}/test-cranberry.txt
+          opts=(
+            --verbose
+            --netrc
+            --insecure
+            --ssl-reqd
+            --ftp-port -
+            --eprt
+          )
+          curl "${opts[@]}" ftp://{{ ftp_hostname }}/
+          curl "${opts[@]}" ftp://{{ ftp_hostname }}/test-cranberry.txt
     - copy:
         dest: /home/vagrant/.lftprc
         owner: vagrant
@@ -97,6 +105,7 @@
           dirmessage_enable=YES
           xferlog_enable=YES
           connect_from_port_20=YES
+          ftp_data_port=20
           xferlog_std_format=YES
           listen=YES
           pam_service_name=vsftpd
@@ -120,9 +129,10 @@
           ssl_tlsv1_2=YES
           require_ssl_reuse=YES
           ssl_ciphers=HIGH
-          pasv_enable=YES
+          pasv_enable=NO
           pasv_min_port={{ ftp_pasv_min_port }}
           pasv_max_port={{ ftp_pasv_max_port }}
+          port_enable=YES
       notify: restart_vsftpd
     - service:
         name: vsftpd
